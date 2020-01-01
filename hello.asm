@@ -1,23 +1,38 @@
+!src "zeropage.inc"
+!src "vera.inc"
+
 *=$1000
 
-verareg = $9f20
-
-veralo = verareg+0
-veramid = verareg+1
-verahi = verareg+2
-veradat = verareg+3
-veradat2 = verareg+4
-veractl = verareg+5
-veraien = verareg+6
-veraisr = verareg+7
+main:
+	jsr init
+	lda #$00
+	sta zpchar
+	ldx #0
+	ldy #0
+-	sty zpcolor
+	jsr write_char
+	cpx #9
+	beq +
+	inx
+	iny
+	jmp -
++	rts
 
 init:
 	lda #0
 	sta	veractl
 	sta veralo
 	sta veramid
-	lda #$20
+	lda #$10
 	sta verahi
+	rts
+
+write_char:
+	lda zpchar
+	sta veradat
+	lda zpcolor
+	sta veradat
+	rts
 
 hello:
 	ldx #0	
@@ -26,7 +41,6 @@ hello:
 	sta veradat
 	inx
 	jmp -
-
 +	rts
 
 .string !scr "hello, world!",0
